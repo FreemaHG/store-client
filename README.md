@@ -3,9 +3,10 @@
 ```
 npx create-reacr-app .
 ```
-Установка пакетов для маршрутизации, менеджера состояний и отправки запросов
+Установка пакетов для маршрутизации (react-router-dom), менеджера состояний (react-redux), 
+@reduxjs/toolkit упрощает работу react-redux с и отправки запросов (axios).
 ```
-npm install react-router-dom @reduxjs/toolkit axios
+npm install react-router-dom react-redux @reduxjs/toolkit axios
 ```
 
 Макет Фигма - https://www.figma.com/design/7itpNsHVP5LPUpK4ENDYkv/Shop?node-id=0-1
