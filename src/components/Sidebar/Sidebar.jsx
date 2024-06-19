@@ -11,7 +11,7 @@ const Sidebar = () => {
 
 	return (
 		<section className={styles.sidebar}>
-			<div className={styles.title}>CATEGORIES</div>
+			<div className={styles.title}>Категории</div>
 			{/* блок с меню, получаем данные из API */}
 			<nav>
 				<ul className={styles.menu}>

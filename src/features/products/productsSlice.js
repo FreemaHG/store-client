@@ -1,17 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// асинхронная функция для получения категорий с сервера, возвращает промис - результат в будущем!
-export const getCategories = createAsyncThunk(
+
+// асинхронная функция для получения товаров с сервера, возвращает промис - результат в будущем!
+export const getProducts = createAsyncThunk(
 	// 1 аргумент - URL адрес + название функции
-	"categories/getCategories",
+	"products/getProducts",
 	async (_, thunkAPI) => {
-		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
+		// выполняем запрос к API для получения товаров, в catch обрабатываем ошибку
 		try {
-			// по умолчанию axios делает GET-запрос (можно не писать axios.get()
-			// process.env.REACT_APP_API_URL - подставляет URL API из .env
-			const res = await axios(`${process.env.REACT_APP_API_URL}/categories`);
-			return res.data;  // возвращаем результат
+			// подставляет URL API из .env
+			const res = await axios(`${process.env.REACT_APP_API_URL}/products`);
+			return res.data;
 		} catch (err) {
 			console.error(err);
 			return thunkAPI.rejectWithValue(err);
@@ -25,33 +25,35 @@ export const getCategories = createAsyncThunk(
 	- fulfilled - промис выполнен и содержит значение
 	- rejected - промис не выполнен и содержит ошибку
 */
-const categoriesSlice = createSlice({
-	name: "categories",
+const productsSlice = createSlice({
+	name: "products",
 	// состояния
 	initialState: {
 		list: [],  // по умолчанию пустой список с категориями
+		// filtered: [],  // фильтры
+		// related: [],
 		isLoading: false,  // для отслеживания загрузки данных с сервера
 	},
 	extraReducers: (builder) => {
 		// 1 аргумент состояние, 2 аргумент - действие, результатом которого будет новое состояние
 		// обработка состояния промиса - pending (ожидание)
-		builder.addCase(getCategories.pending, (state) => {
+		builder.addCase(getProducts.pending, (state) => {
 			// обновляем состояние с флагом загрузки
 			state.isLoading = true;
 		});
 		// обработка состояния промиса - fulfilled (результат запроса)
-		builder.addCase(getCategories.fulfilled, (state, action) => {
+		builder.addCase(getProducts.fulfilled, (state, action) => {
 			// обновляем состояние с категориями
 			// ВАЖНО: в коде мы как будто бы мутируем состояние (оригинал), но под капотом redux изменяет копию списка!
 			state.list = action.payload;
 			state.isLoading = false;  // выключаем флаг загрузки
 		});
 		// обработка состояния промиса - rejected (ошибка)
-		builder.addCase(getCategories.rejected, (state) => {
+		builder.addCase(getProducts.rejected, (state) => {
 			state.isLoading = false;
 			// т.к. в getCategories ошибка обрабатывается в блоке catch, то здесь не обязательно выводить и делать что-либо
 		});
 	},
 });
 
-export default categoriesSlice.reducer;
+export default productsSlice.reducer;

@@ -10,3 +10,6 @@ npm install react-router-dom react-redux @reduxjs/toolkit axios
 ```
 
 Макет Фигма - https://www.figma.com/design/7itpNsHVP5LPUpK4ENDYkv/Shop?node-id=0-1
+
+
+Переименовать .env.template в .env при сборке!
