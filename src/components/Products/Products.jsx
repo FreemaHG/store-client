@@ -5,7 +5,7 @@ import styles from "../../styles/Products.module.css";
 
 /**
  * @component
- * @description Компонент для отображения блока с товарами для популярных, похожих и отфильтрованных товаров
+ * @description Блок для вывода популярных, похожих и отфильтрованных товаров
  * @prop {string} title - заголовок блока
  * @prop {object} style - стили
  * @prop {list} products - массив с товарами

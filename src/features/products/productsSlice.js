@@ -30,9 +30,18 @@ const productsSlice = createSlice({
 	// состояния
 	initialState: {
 		list: [],  // по умолчанию пустой список с категориями
-		// filtered: [],  // фильтры
-		// related: [],
+		filtered: [],  // отфильтрованные товары
+		related: [],
 		isLoading: false,  // для отслеживания загрузки данных с сервера
+	},
+	reducers: {
+		// функция для фильтрации товаров по цене
+		// state - состояние с товарами с сервера
+		// payload - цена для фильтрации
+		filterByPrice: (state, { payload }) => {
+			// сохраняем в состояние filtered массив с отфильтрованными по цене товарами
+			state.filtered = state.list.filter(({ price }) => price <= payload);
+		}
 	},
 	extraReducers: (builder) => {
 		// 1 аргумент состояние, 2 аргумент - действие, результатом которого будет новое состояние
@@ -57,3 +66,4 @@ const productsSlice = createSlice({
 });
 
 export default productsSlice.reducer;
+export const { filterByPrice } = productsSlice.actions;

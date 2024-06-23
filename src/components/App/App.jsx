@@ -15,7 +15,7 @@ const App = () => {
 	const dispatch = useDispatch();
 
 	// выполняем запросы к серверу для получения данных
-	// useEffect выполняет функцию dispatch, только если массив зввисимостей изменится, т.е. один раз
+	// useEffect выполняет функцию dispatch, только если массив зависимостей изменится, т.е. один раз
 	useEffect(() => {
 		dispatch(getCategories());  // получаем категории
 		dispatch(getProducts());  // получаем товары
