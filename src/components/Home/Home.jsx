@@ -14,7 +14,10 @@ const Home = () => {
 	const dispatch = useDispatch();
 
 	// через хук получаем данные по товарам и категориям из хранилища redux
-	const { products: { list, filtered }, categories } = useSelector((state) => state);
+	const {
+		products: { list, filtered },
+		categories,
+	} = useSelector((state) => state);
 
 	// выполняем запросы к серверу для получения данных
 	// useEffect выполняет функцию dispatch, только если массив зависимостей изменится, т.е. один раз

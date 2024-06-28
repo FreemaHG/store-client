@@ -8,7 +8,7 @@ import styles from "../../styles/Products.module.css";
  * @description Блок для вывода популярных, похожих и отфильтрованных товаров
  * @prop {string} title - заголовок блока
  * @prop {object} style - стили
- * @prop {list} products - массив с товарами
+ * @prop {array} products - массив с товарами
  * @prop {number} amount - кол-во товаров для вывода
  */
 const Products = ({ title, style = {}, products = [], amount }) => {

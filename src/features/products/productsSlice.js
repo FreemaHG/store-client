@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
+// 1 подход для запросов данных с сервера
 // асинхронная функция для получения товаров с сервера, возвращает промис - результат в будущем!
 export const getProducts = createAsyncThunk(
 	// 1 аргумент - URL адрес + название функции
