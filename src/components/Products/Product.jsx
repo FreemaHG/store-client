@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import styles from "../../styles/Product.module.css";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/routes";
+import { addItemToCart } from "../../features/user/userSlice";
 
 // имитация данных с фронта с размерами
 const SIZES = [4, 4.5, 5];
@@ -15,7 +17,12 @@ const SIZES = [4, 4.5, 5];
  * @prop {string} description - описание товара
  * @prop {string[]} images - массив с изображениями
  */
-const Product = ({ title, price, description, images }) => {
+const Product = (item) => {
+	// распаковываем все пропсы
+	const { title, price, description, images } = item;
+
+	// dispatch позволяет вызывать функцию для изменения состояния в redux
+	const dispatch = useDispatch();
 
 	// первое изображение товара
 	const [currentImage, setCurrentImage] = useState(images[0]);
@@ -27,6 +34,11 @@ const Product = ({ title, price, description, images }) => {
 		// при изменении массива картинок изменяем главную картинку товара на первую в массиве
 		setCurrentImage(images[0]);
 	}, [images]);
+
+	// добавление товара в корзину
+	const addToCart = () => {
+		dispatch(addItemToCart(item));
+	}
 
 	return (
 		<section className={styles.product}>
@@ -74,7 +86,7 @@ const Product = ({ title, price, description, images }) => {
 					кнопка добавления в корзину не активна, пока не выбран размер
 					(пока состояние, отвечающее за размер, не имеет данных)
 					*/}
-					<button className={styles.add} disabled={!currentSize}>Add to cart</button>
+					<button className={styles.add} disabled={!currentSize} onClick={addToCart}>Add to cart</button>
 					<button className={styles.favourite}>Add to favourites</button>
 				</div>
 				<div className={styles.bottom}>

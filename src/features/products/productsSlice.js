@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { shuffle } from "../../utils/common";
 
 
 // 1 подход для запросов данных с сервера
@@ -30,9 +31,9 @@ const productsSlice = createSlice({
 	name: "products",
 	// состояния
 	initialState: {
-		list: [],  // по умолчанию пустой список с категориями
+		list: [],  // по умолчанию пустой список товарами
 		filtered: [],  // отфильтрованные товары
-		related: [],
+		related: [],  // похожие товары
 		isLoading: false,  // для отслеживания загрузки данных с сервера
 	},
 	reducers: {
@@ -42,7 +43,13 @@ const productsSlice = createSlice({
 		filterByPrice: (state, { payload }) => {
 			// сохраняем в состояние filtered массив с отфильтрованными по цене товарами
 			state.filtered = state.list.filter(({ price }) => price <= payload);
-		}
+		},
+		// возврат товаров той же категории
+		getRelatedProducts: (state, { payload }) => {
+			const list = state.list.filter(({ category: { id } }) => id === payload);
+			// сохраняем в состояние перемешанный массив с товарами той же категории
+			state.related = shuffle(list);
+		},
 	},
 	extraReducers: (builder) => {
 		// 1 аргумент состояние, 2 аргумент - действие, результатом которого будет новое состояние
@@ -67,4 +74,5 @@ const productsSlice = createSlice({
 });
 
 export default productsSlice.reducer;
-export const { filterByPrice } = productsSlice.actions;
+// экспортируем для доступа к хранилищу redux внутри компонентов через функцию dispatch
+export const { filterByPrice, getRelatedProducts } = productsSlice.actions;
