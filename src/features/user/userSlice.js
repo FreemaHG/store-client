@@ -2,24 +2,24 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-// // 1 подход для запросов данных с сервера
-// // асинхронная функция для получения категорий с сервера, возвращает промис - результат в будущем!
-// export const getCategories = createAsyncThunk(
-// 	// 1 аргумент - URL адрес + название функции
-// 	"categories/getCategories",
-// 	async (_, thunkAPI) => {
-// 		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
-// 		try {
-// 			// по умолчанию axios делает GET-запрос (можно не писать axios.get()
-// 			// process.env.REACT_APP_API_URL - подставляет URL API из .env
-// 			const res = await axios(`${process.env.REACT_APP_API_URL}/categories`);
-// 			return res.data;  // возвращаем результат
-// 		} catch (err) {
-// 			console.error(err);
-// 			return thunkAPI.rejectWithValue(err);
-// 		}
-// 	}
-// );
+// создание (регистрация) пользователя
+export const createUser = createAsyncThunk(
+	// 1 аргумент - URL адрес + название функции
+	"users/createUser",
+	async (payload, thunkAPI) => {
+		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
+		try {
+			// process.env.REACT_APP_API_URL - подставляет URL API из .env
+			// TODO Поменять на свой URL
+			// const res = await axios(`${process.env.REACT_APP_API_URL}/categories`);
+			const res = await axios.post("https://api.escuelajs.co/api/v1/users/", payload);
+			return res.data;  // возвращаем результат
+		} catch (err) {
+			console.error(err);
+			return thunkAPI.rejectWithValue(err);
+		}
+	}
+);
 
 /*
 В редукторе обрабатываем 3 состояния промиса (генерируем редьюсеры для каждого действия):
@@ -31,11 +31,15 @@ const userSlice = createSlice({
 	name: "user",
 	// состояния
 	initialState: {
-		currentUser: [],  // по умолчанию пустой массив с текущим пользователем
+		currentUser: null,  // текущий пользователь, по умолчанию null
 		cart: [],  // по умолчанию пустой массив с данными о товарах в корзине
 		isLoading: false,  // для отслеживания загрузки данных с сервера
+		formType: "signup",  // тип формы (регистрация)
+		showForm: false,  // флаг для отображения формы регистрации
 	},
+	// вызываемые действия для смены состояния в хранилище redux
 	reducers: {
+		// добавление товара в корзину
 		addItemToCart: (state, { payload }) => {
 			// добавляем в переменную все уже имеющиеся товары в состоянии с товарами в корзине
 			let newCart = [...state.cart];
@@ -55,6 +59,13 @@ const userSlice = createSlice({
 
 			// добавляем в состояние с корзинами новую созданную корзину с товарами
 			state.cart = newCart;
+		},
+		// смена флага для вывода формы регистрации
+		// state - объект со всеми состояниями
+		// payload - новое значение состояния
+		toggleForm: (state, { payload }) => {
+			// меняем флаг на переданный
+			state.showForm = payload;
 		}
 	},
 	extraReducers: (builder) => {
@@ -64,13 +75,11 @@ const userSlice = createSlice({
 		// 	// обновляем состояние с флагом загрузки
 		// 	state.isLoading = true;
 		// });
-		// // обработка состояния промиса - fulfilled (результат запроса)
-		// builder.addCase(getCategories.fulfilled, (state, action) => {
-		// 	// обновляем состояние с категориями
-		// 	// ВАЖНО: в коде мы как будто бы мутируем состояние (оригинал), но под капотом redux изменяет копию списка!
-		// 	state.list = action.payload;
-		// 	state.isLoading = false;  // выключаем флаг загрузки
-		// });
+		// обработка состояния промиса - fulfilled (результат запроса)
+		builder.addCase(createUser.fulfilled, (state, action) => {
+			// обновляем состояние с данными созданного пользователя
+			state.currentUser = action.payload;
+		});
 		// // обработка состояния промиса - rejected (ошибка)
 		// builder.addCase(getCategories.rejected, (state) => {
 		// 	state.isLoading = false;
@@ -79,5 +88,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { addItemToCart } = userSlice.actions;
+export const { addItemToCart, toggleForm } = userSlice.actions;
 export default userSlice.reducer;

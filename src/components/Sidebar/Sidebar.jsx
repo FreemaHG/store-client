@@ -5,6 +5,10 @@ import { useSelector } from "react-redux";
 import styles from "../../styles/Sidebar.module.css";
 
 
+/**
+ * @component
+ * @description Сайдбар с категориями товаров
+ */
 const Sidebar = () => {
 	// через хук получаем данные по категориям из хранилища redux
 	const { list } = useSelector(({ categories }) => categories);

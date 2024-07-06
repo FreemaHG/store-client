@@ -1,13 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../../styles/Header.module.css";
 import logo from "../../images/logo.svg";
 import avatar from "../../images/avatar.jpg";
 import { ROUTES } from "../../utils/routes";
+import { toggleForm } from "../../features/user/userSlice";
 
 
 const Header = () => {
+
+	// dispatch позволяет вызывать функцию для изменения состояния в redux
+	const dispatch = useDispatch();
+
+	// получаем данные по текущему пользователю из хранилища redux
+	const { currentUser } = useSelector(({ user }) => user);
+
+	// обработчик клика по иконке пользователя
+	const handleClick = () => {
+		// если нет данных о текущем пользователе, передаем значение флага для смены состояния для вывода формы регистрации
+		if (!currentUser) dispatch(toggleForm(true));
+	}
+
 	return (
 		<div className={styles.header}>
 
@@ -21,7 +36,7 @@ const Header = () => {
 			<div className={styles.info}>
 
 				{/* иконка и имя пользователя */}
-				<div className={styles.user}>
+				<div className={styles.user} onClick={handleClick}>
 					<div className={styles.avatar} style={{ backgroundImage: `url(${avatar})` }}/>
 					<div className={styles.username}>Guest</div>
 				</div>
@@ -41,7 +56,8 @@ const Header = () => {
 							name="search"
 							placeholder="Search for anything..."
 							autoComplete="off"
-							onChange={() => {}}
+							onChange={() => {
+							}}
 							value=""
 						/>
 					</div>
