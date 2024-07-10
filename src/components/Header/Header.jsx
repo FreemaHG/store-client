@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,6 +9,10 @@ import { ROUTES } from "../../utils/routes";
 import { toggleForm } from "../../features/user/userSlice";
 
 
+/**
+ * @component
+ * @description Вывод шапки сайта
+ */
 const Header = () => {
 
 	// dispatch позволяет вызывать функцию для изменения состояния в redux
@@ -17,11 +21,24 @@ const Header = () => {
 	// получаем данные по текущему пользователю из хранилища redux
 	const { currentUser } = useSelector(({ user }) => user);
 
+	// состояние для отображения логика и аватарки авторизованного пользователя
+	// для неавторизованного пользователя отображения данных по умолчанию (гостевых)
+	const [values, setValues] = useState({ name: "Guest", avatar: avatar });
+
+	useEffect(() => {
+		// ничего не делаем, если нет текущего пользователя
+		if (!currentUser) return
+
+		// добавляем данные о логине и аватаре текущего пользователя, если есть данные
+		setValues(currentUser);
+
+	}, [currentUser]);
+
 	// обработчик клика по иконке пользователя
 	const handleClick = () => {
 		// если нет данных о текущем пользователе, передаем значение флага для смены состояния для вывода формы регистрации
 		if (!currentUser) dispatch(toggleForm(true));
-	}
+	};
 
 	return (
 		<div className={styles.header}>
@@ -37,8 +54,9 @@ const Header = () => {
 
 				{/* иконка и имя пользователя */}
 				<div className={styles.user} onClick={handleClick}>
-					<div className={styles.avatar} style={{ backgroundImage: `url(${avatar})` }}/>
-					<div className={styles.username}>Guest</div>
+					{/* подставляем логин и аватарку из состояния */}
+					<div className={styles.avatar} style={{ backgroundImage: `url(${values.avatar})` }}/>
+					<div className={styles.username}>{values.name}</div>
 				</div>
 
 				{/* форма для поиска */}
