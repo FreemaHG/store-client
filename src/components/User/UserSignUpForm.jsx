@@ -17,7 +17,7 @@ const UserSignUpForm = ({ closeForm }) => {
 
 	// сохраняем значение инпутов в состояние
 	const [values, setValues] = useState({
-		name: "",
+		username: "",
 		email: "",
 		password: "",
 		avatar: "",
@@ -77,7 +77,7 @@ const UserSignUpForm = ({ closeForm }) => {
 					<input
 						type="name"
 						placeholder="Your name"
-						name="name"
+						name="username"
 						value={values.name}
 						autoComplete="off"
 						onChange={handleChange}

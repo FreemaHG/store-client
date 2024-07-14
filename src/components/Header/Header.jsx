@@ -23,7 +23,7 @@ const Header = () => {
 
 	// состояние для отображения логика и аватарки авторизованного пользователя
 	// для неавторизованного пользователя отображения данных по умолчанию (гостевых)
-	const [values, setValues] = useState({ name: "Guest", avatar: avatar });
+	const [values, setValues] = useState({ username: "Guest", avatar: avatar });
 
 	useEffect(() => {
 		// ничего не делаем, если нет текущего пользователя
@@ -56,7 +56,7 @@ const Header = () => {
 				<div className={styles.user} onClick={handleClick}>
 					{/* подставляем логин и аватарку из состояния */}
 					<div className={styles.avatar} style={{ backgroundImage: `url(${values.avatar})` }}/>
-					<div className={styles.username}>{values.name}</div>
+					<div className={styles.username}>{values.username}</div>
 				</div>
 
 				{/* форма для поиска */}

@@ -10,9 +10,11 @@ export const createUser = createAsyncThunk(
 		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
 		try {
 			// process.env.REACT_APP_API_URL - подставляет URL API из .env
+
 			// TODO Поменять на свой URL авторизации пользователя!!!
-			// const res = await axios(`${process.env.REACT_APP_API_URL}/categories`);
-			const res = await axios.post("https://api.escuelajs.co/api/v1/users/", payload);
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/users/`, payload);
+			// const res = await axios.post("https://api.escuelajs.co/api/v1/users/", payload);
+			
 			return res.data;  // возвращаем результат
 		} catch (err) {
 			console.error(err);
