@@ -10,11 +10,8 @@ export const createUser = createAsyncThunk(
 		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
 		try {
 			// process.env.REACT_APP_API_URL - подставляет URL API из .env
-
-			// TODO Поменять на свой URL авторизации пользователя!!!
+			// отправляем POST-запрос с данными из формы для регистрации пользователя
 			const res = await axios.post(`${process.env.REACT_APP_API_URL}/users/`, payload);
-			// const res = await axios.post("https://api.escuelajs.co/api/v1/users/", payload);
-			
 			return res.data;  // возвращаем результат
 		} catch (err) {
 			console.error(err);
@@ -22,6 +19,39 @@ export const createUser = createAsyncThunk(
 		}
 	}
 );
+
+// авторизация пользователя
+export const loginUser = createAsyncThunk(
+	// 1 аргумент - URL адрес + название функции
+	"users/loginUser",
+	async (payload, thunkAPI) => {
+		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
+		try {
+			// process.env.REACT_APP_API_URL - подставляет URL API из .env
+			// отправляем POST-запрос с данными из формы для авторизации пользователя
+			// payload - данные, передаваемые на сервер
+			// в res получим токен авторизации
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login/`, payload);
+			// делаем GET-запрос с токеном для получения данных текущего пользователя
+			const login = await axios(`${process.env.REACT_APP_API_URL}/users/me/`, {
+				// передаем токен, полученный после авторизации пользователя
+				headers: {
+					"Authorization": `Bearer ${res.data.access_token}`,
+				}
+			});
+			return login.data;  // возвращаем данные текущего пользователя
+		} catch (err) {
+			console.error(err);
+			return thunkAPI.rejectWithValue(err);
+		}
+	}
+);
+
+// добавление данных о текущем пользователе в состояние
+const addCurrentUser = (state, { payload }) => {
+	// обновляем состояние с данными текущего пользователя
+	state.currentUser = payload;
+};
 
 /*
 В редукторе обрабатываем 3 состояния промиса (генерируем редьюсеры для каждого действия):
@@ -66,8 +96,11 @@ const userSlice = createSlice({
 		// state - объект со всеми состояниями
 		// payload - новое значение состояния
 		toggleForm: (state, { payload }) => {
-			// меняем флаг на переданный
-			state.showForm = payload;
+			state.showForm = payload;  // меняем флаг на переданный
+		},
+		// смена флага с типом формы
+		toggleFormType: (state, { payload }) => {
+			state.formType = payload;  // меняем флаг на переданный
 		}
 	},
 	extraReducers: (builder) => {
@@ -78,10 +111,10 @@ const userSlice = createSlice({
 		// 	state.isLoading = true;
 		// });
 		// обработка состояния промиса - fulfilled (результат запроса)
-		builder.addCase(createUser.fulfilled, (state, action) => {
-			// обновляем состояние с данными созданного пользователя
-			state.currentUser = action.payload;
-		});
+		// в ответе после регистрации и авторизации функция возвращает данные текущего пользователя
+		// передаем эти данные в функцию для обновления состояния о текущем пользователе
+		builder.addCase(createUser.fulfilled, addCurrentUser);
+		builder.addCase(loginUser.fulfilled, addCurrentUser);
 		// // обработка состояния промиса - rejected (ошибка)
 		// builder.addCase(getCategories.rejected, (state) => {
 		// 	state.isLoading = false;
@@ -90,5 +123,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { addItemToCart, toggleForm } = userSlice.actions;
+export const { addItemToCart, toggleForm, toggleFormType } = userSlice.actions;
 export default userSlice.reducer;

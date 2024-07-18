@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import UserSignUpForm from "./UserSignUpForm";
 import styles from "../../styles/User.module.css";
-import { toggleForm } from "../../features/user/userSlice";
+import { toggleForm, toggleFormType } from "../../features/user/userSlice";
+import UserLoginForm from "./UserLoginForm";
 
 /**
  * @component
@@ -15,21 +16,34 @@ const UserForm = () => {
 	const dispatch = useDispatch();
 
 	// получаем данные по текущему флагу вывода формы из хранилища redux
-	const { showForm } = useSelector(({ user }) => user);
+	const { showForm, formType } = useSelector(({ user }) => user);
 
 	// функция для смены флага вывода формы регистрации
-	const closeForm = () => dispatch(toggleForm(false))
+	// вызываем функцию toggleForm, передав в нее новое значение флага
+	const closeForm = () => dispatch(toggleForm(false));
+
+	// функция для смены флага с типом формы
+	// вызываем функцию toggleFormType, передав в нее новое значение флага (type) с типом формы
+	const toggleCurrentFormType = (type) => dispatch(toggleFormType(type));
 
 	// если флаг true, выводим форму регистрации
 	return showForm ? (
 		<>
 			{/* смена флага вывода формы при клике вне области формы (область overlay) */}
 			<div className={styles.overlay} onClick={closeForm}/>
-			{/*
-				передаем в качестве пропса функцию для смены флага вывода формы регистрации,
-				чтобы при клике по крестику скрывать форму
-			*/}
-			<UserSignUpForm closeForm={closeForm}/>
+			{/* в зависимости от флага с типом формы выводим либо форму регистрации (UserSignUpForm), либо форму авторизации (UserLoginForm) */}
+			{/* передаем в качестве пропса функцию для смены флага вывода формы и типы формы, чтобы при клике по крестику скрывать форму */}
+			{
+				formType === "signup" ?
+					<UserSignUpForm
+						toggleCurrentFormType={toggleCurrentFormType}
+						closeForm={closeForm}
+					/> :
+					<UserLoginForm
+						toggleCurrentFormType={toggleCurrentFormType}
+						closeForm={closeForm}
+					/>
+			}
 		</>
 	) : (
 		<></>
