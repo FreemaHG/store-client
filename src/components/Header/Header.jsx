@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../../styles/Header.module.css";
@@ -17,6 +17,8 @@ const Header = () => {
 
 	// dispatch позволяет вызывать функцию для изменения состояния в redux
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
 
 	// получаем данные по текущему пользователю из хранилища redux
 	const { currentUser } = useSelector(({ user }) => user);
@@ -38,6 +40,8 @@ const Header = () => {
 	const handleClick = () => {
 		// если нет данных о текущем пользователе, передаем значение флага для смены состояния для вывода формы регистрации
 		if (!currentUser) dispatch(toggleForm(true));
+		// в противном случае перенаправляем на страницу профиля
+		else navigate(ROUTES.PROFILE);
 	};
 
 	return (

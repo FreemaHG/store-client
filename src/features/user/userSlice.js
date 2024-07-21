@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 
 // создание (регистрация) пользователя
@@ -7,11 +8,29 @@ export const createUser = createAsyncThunk(
 	// 1 аргумент - URL адрес + название функции
 	"users/createUser",
 	async (payload, thunkAPI) => {
-		// выполняем запрос к API для получения категорий, в catch обрабатываем ошибку
+		// выполняем POST-запрос к API, в catch обрабатываем ошибку
 		try {
 			// process.env.REACT_APP_API_URL - подставляет URL API из .env
 			// отправляем POST-запрос с данными из формы для регистрации пользователя
 			const res = await axios.post(`${process.env.REACT_APP_API_URL}/users/`, payload);
+			return res.data;  // возвращаем результат
+		} catch (err) {
+			console.error(err);
+			return thunkAPI.rejectWithValue(err);
+		}
+	}
+);
+
+// обновление данных пользователя
+export const updateUser = createAsyncThunk(
+	// 1 аргумент - URL адрес + название функции
+	"users/updateUser",
+	async (payload, thunkAPI) => {
+		// выполняем PUT-запрос к API, в catch обрабатываем ошибку
+		try {
+			// process.env.REACT_APP_API_URL - подставляет URL API из .env
+			// отправляем PUT-запрос с данными из формы для обновления пользователя
+			const res = await axios.put(`${process.env.REACT_APP_API_URL}/users/${payload.id}`, payload);
 			return res.data;  // возвращаем результат
 		} catch (err) {
 			console.error(err);
@@ -31,12 +50,18 @@ export const loginUser = createAsyncThunk(
 			// отправляем POST-запрос с данными из формы для авторизации пользователя
 			// payload - данные, передаваемые на сервер
 			// в res получим токен авторизации
-			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login/`, payload);
+			// {withCredentials: true} - позволяет получать куки с домена с бэкендом
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login/`, payload, {withCredentials: true});
+
 			// делаем GET-запрос с токеном для получения данных текущего пользователя
+			// withCredentials: true - позволяет передавать куки с текущего домена на домен с бэкендом
 			const login = await axios(`${process.env.REACT_APP_API_URL}/users/me/`, {
+				withCredentials: true,
 				// передаем токен, полученный после авторизации пользователя
 				headers: {
 					"Authorization": `Bearer ${res.data.access_token}`,
+					// 'Access-Control-Allow-Origin': '*',
+					// 'Content-Type': 'application/json'
 				}
 			});
 			return login.data;  // возвращаем данные текущего пользователя
@@ -104,22 +129,12 @@ const userSlice = createSlice({
 		}
 	},
 	extraReducers: (builder) => {
-		// // 1 аргумент состояние, 2 аргумент - действие, результатом которого будет новое состояние
-		// // обработка состояния промиса - pending (ожидание)
-		// builder.addCase(getCategories.pending, (state) => {
-		// 	// обновляем состояние с флагом загрузки
-		// 	state.isLoading = true;
-		// });
 		// обработка состояния промиса - fulfilled (результат запроса)
 		// в ответе после регистрации и авторизации функция возвращает данные текущего пользователя
 		// передаем эти данные в функцию для обновления состояния о текущем пользователе
 		builder.addCase(createUser.fulfilled, addCurrentUser);
 		builder.addCase(loginUser.fulfilled, addCurrentUser);
-		// // обработка состояния промиса - rejected (ошибка)
-		// builder.addCase(getCategories.rejected, (state) => {
-		// 	state.isLoading = false;
-		// 	// т.к. в getCategories ошибка обрабатывается в блоке catch, то здесь не обязательно выводить и делать что-либо
-		// });
+		builder.addCase(updateUser.fulfilled, addCurrentUser);
 	},
 });
 
