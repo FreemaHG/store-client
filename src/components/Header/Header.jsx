@@ -7,6 +7,7 @@ import logo from "../../images/logo.svg";
 import avatar from "../../images/avatar.jpg";
 import { ROUTES } from "../../utils/routes";
 import { toggleForm } from "../../features/user/userSlice";
+import { useGetProductsQuery } from "../../features/api/apiSlice";
 
 
 /**
@@ -20,6 +21,9 @@ const Header = () => {
 
 	const navigate = useNavigate();
 
+	// состояние для хранения введенного инпута для поиска товара
+	const [searchValue, setSearchValue] = useState("");
+
 	// получаем данные по текущему пользователю из хранилища redux
 	const { currentUser } = useSelector(({ user }) => user);
 
@@ -27,9 +31,12 @@ const Header = () => {
 	// для неавторизованного пользователя отображения данных по умолчанию (гостевых)
 	const [values, setValues] = useState({ username: "Guest", avatar: avatar });
 
+	// передаем название товара, введенное в инпут поиска товара
+	const { data, isLoading } = useGetProductsQuery({ title: searchValue });
+
 	useEffect(() => {
 		// ничего не делаем, если нет текущего пользователя
-		if (!currentUser) return
+		if (!currentUser) return;
 
 		// добавляем данные о логине и аватаре текущего пользователя, если есть данные
 		setValues(currentUser);
@@ -42,6 +49,12 @@ const Header = () => {
 		if (!currentUser) dispatch(toggleForm(true));
 		// в противном случае перенаправляем на страницу профиля
 		else navigate(ROUTES.PROFILE);
+	};
+
+	// обработка при изменении инпута поиска товара
+	const handleSearch = ({ target: { value } }) => {
+		// сохраняем новое значение в состояние с введенным инпутом для поиска товара
+		setSearchValue(value);
 	};
 
 	return (
@@ -73,18 +86,47 @@ const Header = () => {
 					</div>
 					<div className={styles.input}>
 						{/* autoComplete="off" - отключение автодополнения */}
+						{/* вызываем функцию handleSearch при изменении инпута */}
 						<input
 							type="search"
 							name="search"
 							placeholder="Search for anything..."
 							autoComplete="off"
-							onChange={() => {
-							}}
-							value=""
+							onChange={handleSearch}
+							value={searchValue}
 						/>
 					</div>
-					{/*	блок с данными, найденными по введенному тексту (скрыт пока нет введенного текста!) */}
-					{false && <div className={styles.box}></div>}
+					{/*	если есть значение в searchValue, отображаем блок с данными, найденными по введенному тексту */}
+					{/*
+					 	вложенное условие с ? :
+						пока идет загрузка, выводим 'Loading'
+						если длина массива с товарами = 0, выводим, что нет результатов
+				 	*/}
+					{searchValue && (
+						<div className={styles.box}>
+							{isLoading
+								? 'Loading'
+								: !data.length
+								? 'No results'
+								: data.map(({id, title, images}) => {
+									return (
+										// при клике по ссылке очищаем значение введенного инпута для поиска товара
+										<Link
+											key={id}
+											onClick={() => setSearchValue("")}
+											className={styles.item}
+											to={`/products/${id}`}
+										>
+											<div
+												className={styles.image}
+												style={{ backgroundImage: `url(${images[0]})` }}
+											/>
+											<div className={styles.title}>{title}</div>
+										</Link>
+									);
+								})}
+						</div>
+					)}
 				</form>
 
 				{/*	иконки для избранного и корзины */}
