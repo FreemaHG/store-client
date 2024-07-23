@@ -8,9 +8,11 @@ export const buildUrl = (url, params) => {
 	Object.entries(params).forEach(([key, value], index) => {
 		// если индекс 0, подставляем '?' (первый параметр), иначе '&' (остальные параметры)
 		const sign = !index ? '?' : '&';
-		urlWithParams += `${sign}${key}=${value}`
+		// добавляем параметр в URL только, если есть его значение!
+		if (value) {
+			urlWithParams += `${sign}${key}=${value}`
+		}
 	})
 
 	return urlWithParams;
-
 }

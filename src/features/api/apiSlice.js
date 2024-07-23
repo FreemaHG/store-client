@@ -16,6 +16,7 @@ export const apiSlice = createApi({
 			providesTags: ["Product"],
 		}),
 		getProducts: builder.query({
+			// опционально передаем параметры, н-р, categoryId=1 для фильтрации всех товаров 1 категории
 			query: (params) => buildUrl("/products", params),
 			providesTags: ["Products"],
 		}),

@@ -25,12 +25,17 @@ const App = () => {
 
 	return (
 		<div className="app">
+			{/* Header всегда виден */}
 			<Header/>
+			{/* форма регистрации и авторизации отображается по клику */}
 			<UserForm />
 			<div className="container">
+				{/* сайдбар виден всегда */}
 				<Sidebar/>
+				{/* в зависимости от URL вырисовывается соответствующий компонент */}
 				<AppRoutes/>
 			</div>
+			{/* footer виден всегда */}
 			<Footer/>
 		</div>
 	);

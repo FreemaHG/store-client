@@ -5,14 +5,21 @@ import Home from "../Home/Home";
 import { ROUTES } from "../../utils/routes";
 import SingleProduct from "../Products/SingleProduct";
 import Profile from "../Profile/Profile";
+import SingleCategory from "../Categories/SingleCategory";
 
 
-// связываем роуты с компонентами
+// связываем роуты (ссылки) с компонентами
 // при переходе по указанным URL будет вызываться соответствующий компонент
+// в зависимости от URL отрисовывается соответствующий компонент на странице
+/**
+ * @component
+ * @description Отрисовка компонентов-страниц для главной страницы, товара, товаров определенной категории и профиля
+ */
 const AppRoutes = () => (
 	<Routes>
 		<Route index element={<Home/>} />
 		<Route path={ROUTES.PRODUCT} element={<SingleProduct/>} />
+		<Route path={ROUTES.CATEGORY} element={<SingleCategory/>} />
 		<Route path={ROUTES.PROFILE} element={<Profile/>} />
 	</Routes>
 );

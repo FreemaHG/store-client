@@ -9,7 +9,10 @@ import Products from "./Products";
 import { getRelatedProducts } from "../../features/products/productsSlice";
 
 
-// загрузка данных о товаре
+/**
+ * @component
+ * @description Страница для отображения данных товара
+ */
 const SingleProduct = () => {
 
 	// для отправки действий в react-redux для обновления состосний
@@ -52,7 +55,7 @@ const SingleProduct = () => {
 		<section className="preloader">Loading...</section>
 	) : (
 		<>
-			{/* передаем распакованные данные в компонент */}
+			{/* передаем распакованные данные в компонент для отображения данных о товаре */}
 			<Product {...data} />
 			{/* Выводим список товаров */}
 			<Products products={related} amount={5} title="Related products" />

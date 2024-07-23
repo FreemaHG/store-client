@@ -12,7 +12,7 @@ export const createUser = createAsyncThunk(
 		try {
 			// process.env.REACT_APP_API_URL - подставляет URL API из .env
 			// отправляем POST-запрос с данными из формы для регистрации пользователя
-			const res = await axios.post(`${process.env.REACT_APP_API_URL}/users/`, payload);
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/users`, payload);
 			return res.data;  // возвращаем результат
 		} catch (err) {
 			console.error(err);
@@ -51,11 +51,11 @@ export const loginUser = createAsyncThunk(
 			// payload - данные, передаваемые на сервер
 			// в res получим токен авторизации
 			// {withCredentials: true} - позволяет получать куки с домена с бэкендом
-			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login/`, payload, {withCredentials: true});
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payload, {withCredentials: true});
 
 			// делаем GET-запрос с токеном для получения данных текущего пользователя
 			// withCredentials: true - позволяет передавать куки с текущего домена на домен с бэкендом
-			const login = await axios(`${process.env.REACT_APP_API_URL}/users/me/`, {
+			const login = await axios(`${process.env.REACT_APP_API_URL}/users/me`, {
 				withCredentials: true,
 				// передаем токен, полученный после авторизации пользователя
 				headers: {
