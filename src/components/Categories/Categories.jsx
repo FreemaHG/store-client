@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
  * @component
  * @description Блок для вывода категорий
  * @prop {string} title - заголовок блока
- * @prop {list} products - массив с категориями
+ * @prop {list} categories - массив с категориями
  * @prop {number} amount - кол-во категорий для вывода
  */
 const Categories = ({ title, categories = [], amount }) => {

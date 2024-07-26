@@ -13,6 +13,7 @@ export const getProducts = createAsyncThunk(
 		try {
 			// подставляет URL API из .env
 			const res = await axios(`${process.env.REACT_APP_API_URL}/products`);
+			// из-за пагинации возвращаем вложенный объект по ключу items с массивом товаров
 			return res.data;
 		} catch (err) {
 			console.error(err);
