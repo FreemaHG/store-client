@@ -16,3 +16,7 @@ export const buildUrl = (url, params) => {
 
 	return urlWithParams;
 }
+
+// суммирование всех позиций в корзине
+// проходим циклом по массиву и складываем предыдущее число со следующим, получая общую сумму
+export const sumBy = (arr) => arr.reduce((prev, cur) => prev + cur, 0);

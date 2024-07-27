@@ -15,7 +15,7 @@ import { getRelatedProducts } from "../../features/products/productsSlice";
  */
 const SingleProduct = () => {
 
-	// для отправки действий в react-redux для обновления состосний
+	// для отправки действий в react-redux для обновления состояний
 	const dispatch = useDispatch();
 
 	// для извлечения данных из хранилища react-redux

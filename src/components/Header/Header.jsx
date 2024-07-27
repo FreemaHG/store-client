@@ -24,8 +24,8 @@ const Header = () => {
 	// состояние для хранения введенного инпута для поиска товара
 	const [searchValue, setSearchValue] = useState("");
 
-	// получаем данные по текущему пользователю из хранилища redux
-	const { currentUser } = useSelector(({ user }) => user);
+	// получаем данные по текущему пользователю и его корзины из хранилища redux
+	const { currentUser, cart } = useSelector(({ user }) => user);
 
 	// состояние для отображения логика и аватарки авторизованного пользователя
 	// для неавторизованного пользователя отображения данных по умолчанию (гостевых)
@@ -142,8 +142,11 @@ const Header = () => {
 						<svg className={styles["icon-cart"]}>
 							<use xlinkHref={`${process.env.PUBLIC_URL}/sprite.svg#bag`}/>
 						</svg>
-						{/* кол-во товаров в корзине */}
-						<span className={styles.count}>2</span>
+						{/* отображаем кол-во товаров в корзине, если они есть */}
+						{/* через двойное отрицание избавляемся от вывода 0, если товаров нет */}
+						{!!cart.length && (
+							<span className={styles.count}>{cart.length}</span>
+						)}
 					</Link>
 				</div>
 

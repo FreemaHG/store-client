@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
 axios.defaults.withCredentials = true;
 
 
@@ -51,7 +52,7 @@ export const loginUser = createAsyncThunk(
 			// payload - данные, передаваемые на сервер
 			// в res получим токен авторизации
 			// {withCredentials: true} - позволяет получать куки с домена с бэкендом
-			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payload, {withCredentials: true});
+			const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payload, { withCredentials: true });
 
 			// делаем GET-запрос с токеном для получения данных текущего пользователя
 			// withCredentials: true - позволяет передавать куки с текущего домена на домен с бэкендом
@@ -117,6 +118,13 @@ const userSlice = createSlice({
 			// добавляем в состояние с корзинами новую созданную корзину с товарами
 			state.cart = newCart;
 		},
+		// удаление товара из корзины пользователя
+		// в payload id товара для удаления
+		removeItemFromCart: (state, { payload }) => {
+			// деструктуризируем из payload только нужный id
+			// после фильтра оставляем в корзине только товары с id не равным переданному
+			state.cart = state.cart.filter(({ id }) => id !== payload);
+		},
 		// смена флага для вывода формы регистрации
 		// state - объект со всеми состояниями
 		// payload - новое значение состояния
@@ -138,5 +146,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { addItemToCart, toggleForm, toggleFormType } = userSlice.actions;
+export const { addItemToCart, removeItemFromCart, toggleForm, toggleFormType } = userSlice.actions;
 export default userSlice.reducer;

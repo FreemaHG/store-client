@@ -111,6 +111,14 @@ const Category = () => {
 		setParams({ ...defaultParams, ...values });
 	};
 
+	// сброс параметров фильтрации товаров
+	const handleReset = () => {
+		setValues(defaultValues);
+		setParams(defaultParams);
+		// смена флага вывода кнопки подгрузки еще товаров
+		setIsEnd(false);
+	}
+
 	return (
 		<section className={styles.wrapper}>
 			{/* выводим название текущей категории (только если есть такое свойство!) */}
@@ -160,7 +168,8 @@ const Category = () => {
 			) : !isSuccess || !items.length ? (
 				<div className={styles.back}>
 					<span>No results</span>
-					<button>Reset</button>
+					{/* сбрасываем параметры фильтрации */}
+					<button onClick={handleReset}>Reset</button>
 				</div>
 			) : (
 				<Products
