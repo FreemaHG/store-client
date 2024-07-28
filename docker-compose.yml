@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+
+  store-client:
+    container_name: store-client
+    build:
+      context: .
+    ports:
+      - '80:80'
