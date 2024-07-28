@@ -26,7 +26,7 @@ const App = () => {
 	return (
 		<div className="app">
 			{/* Header всегда виден */}
-			<Header/>
+			<Header />
 			{/* форма регистрации и авторизации отображается по клику */}
 			<UserForm />
 			<div className="container">
