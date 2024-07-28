@@ -10,6 +10,7 @@ import { store } from "./features/store";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+	// StrictMode проверяет и выявляет проблемы при разработке, не влияет на производительность прод.версии приложения
 	<React.StrictMode>
 		{/* оборачиваем приложение для работы менеджера состояний */}
 		<Provider store={store}>
