@@ -22,5 +22,4 @@ export const store = configureStore({
 	// и другие полезные функции "rtk-запроса".
 	middleware: (getMiddleware) => getMiddleware().concat(apiSlice.middleware),
 	devTools: true,
-
 });
